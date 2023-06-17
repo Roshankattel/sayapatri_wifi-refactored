@@ -13,8 +13,8 @@ extern int httpCode;
 extern bool rechargeRequest;
 extern String userName;
 
-extern char *MERCHANT_EMAIL;
-extern char *MERCHANT_PASSWORD;
+extern String MERCHANT_EMAIL;
+extern String MERCHANT_PASSWORD;
 
 String merchantLogin();
 String transactionRequest(const String accessToken, const String tagData);

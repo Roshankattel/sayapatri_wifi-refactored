@@ -44,8 +44,8 @@ MFRC522 mfrc522(HSPI_SS, HSPI_RST, hspi);
 WiFiManager wm;
 
 /*Merchant Details*/
-char *MERCHANT_EMAIL;
-char *MERCHANT_PASSWORD;
+String MERCHANT_EMAIL;
+String MERCHANT_PASSWORD;
 
 bool deviceConnected;
 BLEServer *pServer = NULL;

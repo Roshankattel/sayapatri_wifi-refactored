@@ -25,7 +25,7 @@ const int DIGIT_ZERO_ASCII_VALUE = 48;
 const String SERVER_IP = "rfid.goswivt.com/api/v1";
 
 // JSON configuration file
-const String JSON_CONFIG_FILE = "/config.json";
+const String CONFIG_FILE = "/config.json";
 
 // #define TFT_MOSI 19
 // #define TFT_SCLK 18

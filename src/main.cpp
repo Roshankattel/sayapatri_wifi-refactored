@@ -59,8 +59,11 @@ void setup()
   wm.setSaveConfigCallback(saveConfigCallback);
 
   // setup custom fields in wifiManager settings
-  WiFiManagerParameter merchat_email("email", "Merchant Email", MERCHANT_EMAIL, 50);
-  WiFiManagerParameter merchat_password("password", "Merchant password", MERCHANT_PASSWORD, 50);
+  WiFiManagerParameter merchat_email("email", "Merchant Email", MERCHANT_EMAIL.c_str(), 50);
+  WiFiManagerParameter merchat_password("password", "Merchant password", MERCHANT_PASSWORD.c_str(), 50);
+
+  debugln(MERCHANT_EMAIL);
+  debugln(MERCHANT_PASSWORD);
 
   // add custom parameters
   wm.addParameter(&merchat_email);
@@ -122,8 +125,8 @@ void setup()
 
   delay(1000);
 
-  strcpy(MERCHANT_EMAIL, merchat_email.getValue());
-  strcpy(MERCHANT_PASSWORD, merchat_password.getValue());
+  MERCHANT_EMAIL = merchat_email.getValue();
+  MERCHANT_PASSWORD = merchat_password.getValue();
 
   if (shouldSaveConfig)
     saveConfigFile();

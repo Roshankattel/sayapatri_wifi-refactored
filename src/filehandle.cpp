@@ -12,7 +12,7 @@ bool saveConfigFile()
 
     serializeJsonPretty(json, Serial);
 
-    File configFile = SPIFFS.open(JSON_CONFIG_FILE, "w");
+    File configFile = SPIFFS.open(CONFIG_FILE, "w");
 
     if (!configFile)
     {
@@ -45,7 +45,7 @@ bool loadConfigFile()
         return 0;
     }
 
-    if (!(SPIFFS.exists(JSON_CONFIG_FILE)))
+    if (!(SPIFFS.exists(CONFIG_FILE)))
     {
         debugln("Failed to load json config");
         return 0;
@@ -53,7 +53,7 @@ bool loadConfigFile()
 
     debugln("\nThe file exists and reading config file");
 
-    File configFile = SPIFFS.open(JSON_CONFIG_FILE, "r");
+    File configFile = SPIFFS.open(CONFIG_FILE, "r");
 
     if (!configFile)
         return 0;
@@ -67,11 +67,11 @@ bool loadConfigFile()
         return 0;
     }
 
-    debugln(JSON_CONFIG_FILE);
+    debugln(CONFIG_FILE);
     serializeJsonPretty(json, Serial);
 
-    strcpy(MERCHANT_EMAIL, json["merchant_email"].as<const char *>());
-    strcpy(MERCHANT_PASSWORD, json["merchant_password"].as<const char *>());
+    MERCHANT_EMAIL = json["merchant_email"].as<String>();
+    MERCHANT_PASSWORD = json["merchant_password"].as<String>();
 
     return 1;
 }
