@@ -1,13 +1,5 @@
 #include "main.h"
 
-int status;
-
-void saveConfigCallback()
-{
-  debugln("Should save config");
-  shouldSaveConfig = true;
-}
-
 class MyCallbacks : public BLECharacteristicCallbacks
 {
   void onWrite(BLECharacteristic *pCharacteristic)
@@ -35,6 +27,7 @@ class MyServerCallbacks : public BLEServerCallbacks
 void notifyTimer(uint8_t state);
 void checkWifiStatus();
 void setupBLE();
+void saveConfigCallback();
 
 void setup()
 {
@@ -51,9 +44,7 @@ void setup()
   }
 
   wm.setDebugOutput(false);
-
   wm.setDarkMode(true);
-
   // Set config save notify callback
   wm.setSaveConfigCallback(saveConfigCallback);
 
@@ -93,7 +84,6 @@ void setup()
 
   if (digitalRead(TRIGGER_PIN) == LOW)
   {
-
     showHotspot((uint32_t)ESP.getEfuseMac());
     wm.resetSettings();
     wm.setConfigPortalTimeout(TIMEOUT);
@@ -130,10 +120,8 @@ void setup()
   if (shouldSaveConfig)
     saveConfigFile();
 
-  debugln("\nThe device started, now you can pair it with bluetooth!\n");
-  debugln("THE FREE HEAP IS = " + String(ESP.getFreeHeap()));
-
   void setupBLE();
+  debugln("\nThe device started, now you can pair it with bluetooth!\n");
 
   showImage(BTH_X, BTH_Y, (uint8_t *)bluetooth, sizeof(bluetooth));
   welcomePage();
@@ -162,7 +150,6 @@ void loop()
       processState++;
     else if (status == -1)
       processState--;
-
     break;
 
   case NOTIFY:
@@ -234,4 +221,10 @@ void checkWifiStatus()
         playBuzz(SINGLE);
     }
   }
+}
+
+void saveConfigCallback()
+{
+  debugln("Should save config");
+  shouldSaveConfig = true;
 }

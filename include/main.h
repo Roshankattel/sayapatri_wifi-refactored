@@ -47,8 +47,11 @@ WiFiManager wm;
 String MERCHANT_EMAIL;
 String MERCHANT_PASSWORD;
 
+int status;
+
 bool deviceConnected;
 BLEServer *pServer = NULL;
+
 // BLE UUID
 const char *SERVICE_UUID = "4539568a-3950-47b8-b363-e474529f0ede";
 const char *CHARACTERISTIC_UUID = "3fa39d68-c3d3-4978-bcca-2a525f96cfd3";
