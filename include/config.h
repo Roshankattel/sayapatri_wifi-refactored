@@ -2,6 +2,8 @@
 #define CONFIG_H
 #include <Arduino.h>
 
+#define TEST 1
+
 #define DEBUG 1
 
 #if DEBUG == 1

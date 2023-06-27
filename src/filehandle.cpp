@@ -41,7 +41,7 @@ bool loadConfigFile()
 
     if (!(SPIFFS.begin(false) || SPIFFS.begin(true)))
     {
-        debugln("Failed to mount FS");
+        debugln("\nFailed to mount FS");
         return 0;
     }
 
@@ -51,7 +51,7 @@ bool loadConfigFile()
         return 0;
     }
 
-    debugln("\nThe file exists and reading config file");
+    debugln("\nThe file exists and reading config file\n");
 
     File configFile = SPIFFS.open(CONFIG_FILE, "r");
 
@@ -69,6 +69,7 @@ bool loadConfigFile()
 
     debugln(CONFIG_FILE);
     serializeJsonPretty(json, Serial);
+    debugln("\n");
 
     MERCHANT_EMAIL = json["merchant_email"].as<String>();
     MERCHANT_PASSWORD = json["merchant_password"].as<String>();

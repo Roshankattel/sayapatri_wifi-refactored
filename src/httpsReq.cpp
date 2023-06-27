@@ -11,34 +11,37 @@ String sendHttpPostRequest(const String endpoint, const String httpRequestData, 
 
     String payload;
 
-    debugln("\nPOST REQUEST DATA:\n" + httpRequestData);
+    debugln("\nPOST REQUEST DATA:");
+    debugln(httpRequestData);
 
     http.setTimeout(5000); // Set timeout to 5 seconds
     client.setInsecure();
 
-    if (http.begin(client, "https://" + SERVER_IP + "/" + endpoint))
+    if (!http.begin(client, "https://" + SERVER_IP + "/" + endpoint))
     {
-        if (!token.isEmpty())
-            http.addHeader("Authorization", "Bearer " + token);
-
-        http.addHeader("Content-Type", "application/json");
-        httpCode = http.POST(httpRequestData);
-        payload.reserve(http.getSize());
-        payload = http.getString();
-        http.end();
-
-        debugln("\n\nPOST REQUEST RESPONSE:");
-        debugln(payload);
-
-        if (httpCode > 0)
-            debugln("\n[HTTP] POST... code:" + String(httpCode));
-
-        else
-            debugln("\n[HTTP] POST... failed, error:" + http.errorToString(httpCode));
-    }
-    else
         debugln("\n[HTTP] Unable to connect");
+        return "";
+    }
 
+    if (!token.isEmpty())
+        http.addHeader("Authorization", "Bearer " + token);
+
+    http.addHeader("Content-Type", "application/json");
+    httpCode = http.POST(httpRequestData);
+    payload.reserve(http.getSize());
+    payload = http.getString();
+    http.end();
+
+    debugln("\n\nPOST REQUEST RESPONSE:");
+    debugln(payload);
+
+    if (httpCode != 200)
+    {
+        debugln("\n[HTTP] POST...Failed, code:" + String(httpCode));
+        return "";
+    }
+
+    debugln("\n[HTTP] POST... Success, Code:" + String(httpCode));
     return payload;
 }
 
@@ -47,7 +50,7 @@ String merchantLogin()
     String httpRequestData;
     httpRequestData.reserve(1024);
 
-    SpiRamJsonDocument doc(2048);
+    SpiRamJsonDocument doc(4096);
     doc["email"] = MERCHANT_EMAIL;
     doc["password"] = MERCHANT_PASSWORD;
     doc["role"] = "merchant";
@@ -55,13 +58,17 @@ String merchantLogin()
     serializeJson(doc, httpRequestData);
 
     String response = sendHttpPostRequest("auth/login", httpRequestData, "");
-    if (!response.isEmpty())
+    if (response.isEmpty())
     {
-        DeserializationError error = deserializeJson(doc, response);
-        if (!error)
-            return doc["accessToken"].as<String>();
+        debugln("\nFailed! The response is empty");
+        return "";
     }
-    return "";
+
+    DeserializationError error = deserializeJson(doc, response);
+    if (error)
+        return "";
+
+    return doc["accessToken"].as<String>();
 }
 
 String transactionRequest(const String accessToken, const String tagData)
@@ -74,19 +81,22 @@ String transactionRequest(const String accessToken, const String tagData)
     doc["tagData"] = tagData;
     doc["amount"] = amount;
     doc["rechargeRequest"] = rechargeRequest;
-    doc["channel"] = "POS";
+    doc["channel"] = "pos";
 
     serializeJson(doc, httpRequestData);
 
     String response = sendHttpPostRequest("transaction/add", httpRequestData, accessToken);
-    if (!response.isEmpty())
+
+    if (response.isEmpty())
     {
-        DeserializationError error = deserializeJson(doc, response);
-        if (!error)
-        {
-            userName = doc["client"]["name"].as<String>();
-            return userName;
-        }
+        debugln("\nFailed! The response is empty");
+        return "";
     }
-    return "";
+
+    DeserializationError error = deserializeJson(doc, response);
+    if (error)
+        return "";
+
+    userName = doc["client"]["name"].as<String>();
+    return userName;
 }

@@ -4,7 +4,6 @@ int status;
 
 void saveConfigCallback()
 {
-
   debugln("Should save config");
   shouldSaveConfig = true;
 }
@@ -62,8 +61,8 @@ void setup()
   WiFiManagerParameter merchat_email("email", "Merchant Email", MERCHANT_EMAIL.c_str(), 50);
   WiFiManagerParameter merchat_password("password", "Merchant password", MERCHANT_PASSWORD.c_str(), 50);
 
-  debugln(MERCHANT_EMAIL);
-  debugln(MERCHANT_PASSWORD);
+  debugln("Merchant Email: " + MERCHANT_EMAIL);
+  debugln("Merchant Password: " + MERCHANT_PASSWORD);
 
   // add custom parameters
   wm.addParameter(&merchat_email);
@@ -90,7 +89,7 @@ void setup()
   // snprintf(APssid, 30, "SPWiFi-%08X", (uint32_t)ESP.getEfuseMac());
   snprintf(APssid, 30, "SP_Merchant");
 
-  debugln(APssid);
+  debugln("DEVICE NAME: " + String(APssid));
 
   if (digitalRead(TRIGGER_PIN) == LOW)
   {
@@ -154,7 +153,6 @@ void loop()
     break;
 
   case SCAN:
-
     if (buzzMode == ERROR)
       notifyTimer(WELCOME);
 
@@ -168,7 +166,6 @@ void loop()
     break;
 
   case NOTIFY:
-
     notifyProcess();
     notifyTimer(WELCOME);
     break;

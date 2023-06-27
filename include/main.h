@@ -6,9 +6,9 @@
 #include <Wire.h>
 #include <TFT_eSPI.h>
 #include <PNGdec.h>
-#include <BLEServer.h>
 #include <BLEDevice.h>
 #include <BLEUtils.h>
+#include <BLEServer.h>
 // #include "cert.h"
 
 #include "fileHandle.h"

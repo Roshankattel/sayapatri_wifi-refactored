@@ -11,6 +11,16 @@ int scanProcess()
         return -1;
     }
 
+#ifdef TEST == 1
+    const String accessToken = merchantLogin();
+    if (accessToken != "")
+    {
+        const String tag = "5ac5b7f9861b6c48fe0da5d3d1dd281a00ba4873ff0e2ab9e9c26857d98b9a35";
+        userName = transactionRequest(accessToken, tag);
+    }
+
+    return 1;
+#else
     if (!mfrc522.PICC_IsNewCardPresent())
         return 0;
 
@@ -66,4 +76,5 @@ int scanProcess()
         tag = "";
     }
     return 0;
+#endif
 }
