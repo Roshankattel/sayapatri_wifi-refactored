@@ -2,7 +2,7 @@
 #define FILEHANDLE_H
 
 #include <FS.h> //This should be at first
-#include <SPIFFS.h>
+#include <LittleFS.h>
 
 bool saveConfigFile();
 bool loadConfigFile();

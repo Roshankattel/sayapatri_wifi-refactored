@@ -10,6 +10,7 @@
 extern SPIClass hspi;
 extern MFRC522 mfrc522;
 extern int httpCode;
+extern std::string bleValue;
 
 int scanProcess();
 

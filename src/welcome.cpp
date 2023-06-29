@@ -2,40 +2,42 @@
 #include "displayFunction.h"
 #include "config.h"
 
+static uint32_t sum = 0;
+
+void swtichscan()
+{
+    rechargeRequest = sum % 10 == 0 ? true : false;
+    amount = sum / 10;
+    sum = 0;       // reset sum to 0 for next entry
+    bleValue = ""; // clear BLE value
+
+    debugln("rechargeRequest:" + String(rechargeRequest));
+    debugln("Amount:" + String(amount));
+    debugln("THE FREE HEAP IS = " + String(ESP.getFreeHeap()));
+
+    scanPage(rechargeRequest, amount);
+}
+
 uint8_t welcomeProcess()
 {
 
-    if (value.length() > 1)
+    if (bleValue.length() > 1)
     {
 
         debugln("\n<<< New value >>>");
-
-        for (int i = 0; i < value.length(); i++)
+        for (int i = 0; i < bleValue.length(); i++)
         {
-
-            for (int i = 0; i < value.length(); i++)
+            int num = bleValue[i] - DIGIT_ZERO_ASCII_VALUE;
+            if (num >= 0 && num <= 9 && sum <= (AMOUNT_LIMIT / 10))
             {
-                int num = value[i] - DIGIT_ZERO_ASCII_VALUE;
-                if (num >= 0 && num <= 9 && sum <= (AMOUNT_LIMIT / 10))
-                {
-                    sum = sum * 10 + num;
-                    debugln(sum);
-                }
+                sum = sum * 10 + num;
+                debugln(sum);
             }
         }
+
         if (sum > 1)
         {
-            rechargeRequest = (sum % 10 == 0);
-            amount = sum / 10;
-            sum = 0;    // reset sum to 0 for next entry
-            value = ""; // clear BLE value
-
-            scanPage(rechargeRequest, amount);
-
-            debugln("rechargeRequest:" + rechargeRequest);
-            debugln("Amount:" + String(amount));
-            debugln("THE FREE HEAP IS = " + String(ESP.getFreeHeap()));
-
+            swtichscan();
             return 1;
         }
     }
@@ -44,7 +46,6 @@ uint8_t welcomeProcess()
     if (Serial.available())
     {
         int num = Serial.read() - DIGIT_ZERO_ASCII_VALUE;
-        static int sum = 0;
         if (num >= 0 && num <= 9 && sum <= (AMOUNT_LIMIT / 10))
         {
             sum = sum * 10 + num;
@@ -52,10 +53,7 @@ uint8_t welcomeProcess()
         }
         else if (num == -35 && sum > 1)
         {
-            bool rechargeRequest = (sum % 10 == 0);
-            amount = sum / 10;
-            sum = 0;
-            scanPage(rechargeRequest, amount);
+            swtichscan();
             return 1;
         }
     }

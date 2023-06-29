@@ -5,9 +5,8 @@
 #include "displayFunction.h"
 
 extern uint32_t amount;
-extern uint32_t sum;
 extern bool rechargeRequest;
-extern std::string value;
+extern std::string bleValue;
 
 uint8_t welcomeProcess();
 #endif

@@ -6,15 +6,14 @@
 #include <Wire.h>
 #include <TFT_eSPI.h>
 #include <PNGdec.h>
-#include <BLEDevice.h>
-#include <BLEUtils.h>
-#include <BLEServer.h>
+
 // #include "cert.h"
 
 #include "fileHandle.h"
 #include "buzz.h"
 #include "scan.h"
 #include "notify.h"
+#include "ble.h"
 
 unsigned long previousMillis = 0;
 unsigned long turnOnTime = 0;
@@ -23,7 +22,6 @@ int httpCode;
 
 uint8_t processState = 0;
 uint32_t amount = 0;
-uint32_t sum = 0;
 bool rechargeRequest; // for recharge and payment
 
 bool buzzStatus = false;
@@ -33,8 +31,7 @@ uint8_t buzzMode;
 
 String userName;
 
-std::string value;
-
+std::string bleValue; // to store BLE data
 bool shouldSaveConfig = false;
 
 MFRC522::MIFARE_Key key;
@@ -48,12 +45,5 @@ String MERCHANT_EMAIL;
 String MERCHANT_PASSWORD;
 
 int status;
-
-bool deviceConnected;
-BLEServer *pServer = NULL;
-
-// BLE UUID
-const char *SERVICE_UUID = "4539568a-3950-47b8-b363-e474529f0ede";
-const char *CHARACTERISTIC_UUID = "3fa39d68-c3d3-4978-bcca-2a525f96cfd3";
 
 #endif

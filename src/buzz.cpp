@@ -4,7 +4,9 @@ void playBuzz(uint8_t mode)
 {
     buzzMode = mode;
     if (buzzStatus)
+    {
         return;
+    }
 
     digitalWrite(BUZZER_PIN, HIGH);
     turnOnTime = millis();
@@ -14,7 +16,9 @@ void playBuzz(uint8_t mode)
 void checkBuzzerStatus()
 {
     if (!buzzStatus)
+    {
         return;
+    }
 
     switch (buzzMode)
     {
@@ -29,10 +33,14 @@ void checkBuzzerStatus()
 
     case SUCCESS:
         if (millis() - turnOnTime >= 200 and millis() - turnOnTime <= 2 * 200)
+        {
             digitalWrite(BUZZER_PIN, LOW);
+        }
 
         else if (millis() - turnOnTime > 2 * 200 and millis() - turnOnTime <= 3 * 200)
+        {
             digitalWrite(BUZZER_PIN, HIGH);
+        }
 
         else if (millis() - turnOnTime > 3 * 200)
         {

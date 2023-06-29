@@ -12,7 +12,7 @@ bool saveConfigFile()
 
     serializeJsonPretty(json, Serial);
 
-    File configFile = SPIFFS.open(CONFIG_FILE, "w");
+    File configFile = LittleFS.open(CONFIG_FILE, "w");
 
     if (!configFile)
     {
@@ -39,13 +39,13 @@ bool loadConfigFile()
 
     debugln("\nMounting File System...");
 
-    if (!(SPIFFS.begin(false) || SPIFFS.begin(true)))
+    if (!(LittleFS.begin(false) || LittleFS.begin(true)))
     {
         debugln("\nFailed to mount FS");
         return 0;
     }
 
-    if (!(SPIFFS.exists(CONFIG_FILE)))
+    if (!(LittleFS.exists(CONFIG_FILE)))
     {
         debugln("Failed to load json config");
         return 0;
@@ -53,7 +53,7 @@ bool loadConfigFile()
 
     debugln("\nThe file exists and reading config file\n");
 
-    File configFile = SPIFFS.open(CONFIG_FILE, "r");
+    File configFile = LittleFS.open(CONFIG_FILE, "r");
 
     if (!configFile)
         return 0;

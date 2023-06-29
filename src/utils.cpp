@@ -6,7 +6,10 @@ void showError(String errMsg1, String errMsg2)
 {
     clearLCD();
     if (errMsg2 == "")
+    {
         writeString(errMsg1, 160, 180);
+    }
+
     else
     {
         writeString(errMsg1, 160, 140);

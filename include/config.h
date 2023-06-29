@@ -2,7 +2,7 @@
 #define CONFIG_H
 #include <Arduino.h>
 
-#define TEST 1
+#define TEST 0
 
 #define DEBUG 1
 
@@ -47,7 +47,7 @@ enum PROCESS
 {
     WELCOME,
     SCAN,
-    NOTIFY
+    INFORM
 };
 
 enum BUZZ_MODE

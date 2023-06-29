@@ -27,6 +27,6 @@ void notifyProcess()
     else if (httpCode != 0)
     {
         httpCode = 0;
-        showError("Error in Transaction");
+        showError("Error in Transaction", "");
     }
 }
