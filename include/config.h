@@ -2,6 +2,8 @@
 #define CONFIG_H
 #include <Arduino.h>
 
+#define DISABLE_ALL_LIBRARY_WARNINGS
+
 #define TEST 0
 
 #define DEBUG 1
