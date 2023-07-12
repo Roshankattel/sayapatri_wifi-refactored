@@ -34,9 +34,13 @@ String userName;
 std::string bleValue; // to store BLE data
 bool shouldSaveConfig = false;
 
-MFRC522::MIFARE_Key key;
-SPIClass hspi(HSPI);
-MFRC522 mfrc522(HSPI_SS, HSPI_RST, hspi);
+/* PN532  */
+const int DELAY_BETWEEN_CARDS = 500;
+boolean readerDisabled = false;
+int irqCurr;
+int irqPrev;
+
+Adafruit_PN532 nfc(PN532_IRQ, PN532_RESET);
 
 WiFiManager wm;
 

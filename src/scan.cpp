@@ -2,6 +2,45 @@
 #include "utils.h"
 #include "config.h"
 
+void startListeningToNFC()
+{
+    // Reset our IRQ indicators
+    irqPrev = irqCurr = HIGH;
+
+    Serial.println("Waiting for an ISO14443A Card ...");
+    nfc.startPassiveTargetIDDetection(PN532_MIFARE_ISO14443A);
+}
+
+String handleCardDetected()
+{
+    uint8_t success = false;
+    uint8_t uid[] = {0, 0, 0, 0, 0, 0, 0}; // Buffer to store the returned UID
+    uint8_t uidLength;                     // Length of the UID (4 or 7 bytes depending on ISO14443A card type)
+
+    // read the NFC tag's info
+    success = nfc.readDetectedPassiveTargetID(uid, &uidLength);
+    debugln(success ? "Read successful" : "Read failed (not a card?)");
+    String unhashTag;
+    if (success)
+    {
+        // Display some basic information about the card
+        debugln("Found an ISO14443A card");
+        debug("  UID Length: ");
+        Serial.print(uidLength, DEC);
+        debugln(" bytes");
+        debug("  UID Value: ");
+        nfc.PrintHex(uid, uidLength);
+
+        for (int i = 6; i > -1; i--)
+        {
+            unhashTag += int(uid[i]);
+        }
+        debugln(unhashTag);
+        return (unhashTag);
+    }
+    return ("");
+}
+
 int scanProcess()
 {
     if (((bleValue.length() == 1) && (bleValue[0] == 'B')) || Serial.available())
@@ -12,6 +51,8 @@ int scanProcess()
     }
 
 #if TEST == 1
+    debugln("Running Test Case");
+    lcdDisplay("Running Test Case!", "");
     const String accessToken = merchantLogin();
     if (accessToken != "")
     {
@@ -21,67 +62,54 @@ int scanProcess()
 
     return 1;
 #else
-    if (!mfrc522.PICC_IsNewCardPresent())
+    irqCurr = digitalRead(PN532_IRQ);
+
+    if (irqCurr == HIGH || irqPrev == LOW)
     {
-        return 0;
+        irqPrev = irqCurr;
+        return false;
     }
 
-    if (mfrc522.PICC_ReadCardSerial())
+    clearLCD();
+    writeString("Card Scan Sucessful !", 160, 180);
+
+    debugln("\nTHE FREE HEAP IS = " + String(ESP.getFreeHeap()));
+
+    String tag = getHash(handleCardDetected());
+
+    String accessToken = merchantLogin();
+
+    if (httpCode == 200)
     {
-        String unhashTag = "";
-        for (int i = 6; i > -1; i--) // taking in reverse order
+        httpCode = 0;
+        userName = transactionRequest(accessToken, tag);
+
+        if (userName != "")
         {
-            // debugln(mfrc522.uid.uidByte[i]);
-            unhashTag += mfrc522.uid.uidByte[i];
-            mfrc522.uid.uidByte[i] = 0;
+            return 1;
         }
-        // Dump debug info about the card; PICC_HaltA() is automatically called
-        // mfrc522.PICC_DumpToSerial(&(mfrc522.uid));
-        mfrc522.PICC_HaltA();
-        mfrc522.PCD_StopCrypto1();
-
-        debugln("\nTag Data:" + unhashTag);
-
-        String tag = getHash(unhashTag);
-
+    }
+    else if (httpCode == 404)
+    {
+        showError("Merchant Not Found !", "");
+    }
+    else if (httpCode == 400)
+    {
+        showError("Invalid Credentials!", "");
+    }
+    else if (httpCode == -1)
+    {
         clearLCD();
-        writeString("Card Scan Sucessful !", 160, 180);
-
-        debugln("\nTHE FREE HEAP IS = " + String(ESP.getFreeHeap()));
-
-        String accessToken = merchantLogin();
-
-        if (httpCode == 200)
-        {
-            httpCode = 0;
-            userName = transactionRequest(accessToken, tag);
-
-            if (userName != "")
-            {
-                return 1;
-            }
-        }
-        else if (httpCode == 404)
-        {
-            showError("Merchant Not Found !", "");
-        }
-        else if (httpCode == 400)
-        {
-            showError("Invalid Credentials!", "");
-        }
-        else if (httpCode == -1)
-        {
-            clearLCD();
-            writeString("No Internet", 160, 180);
-            delay(1000);
-            welcomePage();
-        }
-        else
-        {
-            showError("Merchant Login Failed", "");
-        }
-        tag = "";
+        writeString("No Internet", 160, 180);
+        delay(1000);
+        welcomePage();
     }
+    else
+    {
+        showError("Merchant Login Failed", "");
+    }
+    tag = "";
+
     return 0;
 #endif
 }

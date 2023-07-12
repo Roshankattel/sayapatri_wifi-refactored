@@ -45,8 +45,29 @@ void setup()
 
   debugln((String) "\n\nMemory available in PSRAM : " + ESP.getFreePsram());
 
-  hspi.begin(HSPI_SCLK, HSPI_MISO, HSPI_MOSI, HSPI_SS);
-  mfrc522.PCD_Init();
+  nfc.begin();
+  uint32_t versiondata = nfc.getFirmwareVersion();
+
+#if DEBUG == 1
+  // Got ok data, print it out!
+  Serial.print("\nFound chip PN5");
+  Serial.println((versiondata >> 24) & 0xFF, HEX);
+  Serial.print("Firmware ver. ");
+  Serial.print((versiondata >> 16) & 0xFF, DEC);
+  Serial.print('.');
+  Serial.println((versiondata >> 8) & 0xFF, DEC);
+#endif
+
+  // configure board to read RFID tags
+  nfc.SAMConfig();
+
+  if (!versiondata)
+  {
+    debugln("\nDidn't find PN53x board");
+    writeString("NFC not working !", 160, 180);
+    while (1)
+      ; // halt
+  }
 
   // http.setReuse(true);
 
@@ -118,6 +139,7 @@ void loop()
     if (welcomeProcess() == 1)
     {
       processState++;
+      startListeningToNFC();
     }
     break;
 

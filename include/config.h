@@ -39,11 +39,15 @@ const String CONFIG_FILE = "/config.json";
 const uint8_t BATTERY_PIN = 14;
 const uint8_t BUZZER_PIN = 12;
 const uint8_t TRIGGER_PIN = 13;
-const uint8_t HSPI_MISO = 27;
-const uint8_t HSPI_MOSI = 26;
-const uint8_t HSPI_SCLK = 25;
-const uint8_t HSPI_SS = 33;
-const uint8_t HSPI_RST = 32;
+
+const uint8_t PN532_IRQ = 13;
+const uint8_t PN532_RESET = 25;
+
+// const uint8_t HSPI_MISO = 27;
+// const uint8_t HSPI_MOSI = 26;
+// const uint8_t HSPI_SCLK = 25;
+// const uint8_t HSPI_SS = 33;
+// const uint8_t HSPI_RST = 32;
 
 enum PROCESS
 {
