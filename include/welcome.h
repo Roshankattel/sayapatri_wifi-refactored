@@ -8,5 +8,5 @@ extern uint32_t amount;
 extern bool rechargeRequest;
 extern std::string bleValue;
 
-uint8_t welcomeProcess();
+uint8_t welcomeProcess(void);
 #endif

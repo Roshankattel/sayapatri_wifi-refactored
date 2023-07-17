@@ -15,7 +15,7 @@ extern Adafruit_PN532 nfc;
 extern int httpCode;
 extern std::string bleValue;
 
-int scanProcess();
-void startListeningToNFC();
+int scanProcess(void);
+void startListeningToNFC(void);
 
 #endif

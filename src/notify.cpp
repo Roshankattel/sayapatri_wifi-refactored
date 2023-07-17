@@ -3,7 +3,7 @@
 #include "utils.h"
 #include "config.h"
 
-void notifyProcess()
+void notifyProcess(void)
 {
     if (httpCode == 200)
     {

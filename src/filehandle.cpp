@@ -2,7 +2,7 @@
 #include "psram.h"
 #include "config.h"
 
-bool saveConfigFile()
+bool saveConfigFile(void)
 {
     debugln("Saving configuration...");
 
@@ -34,7 +34,7 @@ bool saveConfigFile()
     return 1;
 }
 
-bool loadConfigFile()
+bool loadConfigFile(void)
 {
 
     debugln("\nMounting File System...");

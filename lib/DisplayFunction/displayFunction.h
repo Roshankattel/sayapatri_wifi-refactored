@@ -32,16 +32,16 @@
 #define SAYAPATRI_X 52
 #define SAYAPATRI_Y 35
 
-void tftInit();
+void tftInit(void);
 void pngDraw(PNGDRAW *pDraw);
 void clearLCD();
 void showImage(int x, int y, uint8_t *image, int size);
-void chargingDisplay();
-void showPair();
-void clearPair();
-void homePage();
-void startScreen();
-void welcomePage();
+void chargingDisplay(void);
+void showPair(void);
+void clearPair(void);
+void homePage(void);
+void startScreen(void);
+void welcomePage(void);
 void wifiDisplay(bool status);
 void showConnection(String ssid);
 void scanPage(bool rechargeReq, int amount);

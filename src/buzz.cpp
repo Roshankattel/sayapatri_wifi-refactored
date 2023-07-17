@@ -13,7 +13,7 @@ void playBuzz(uint8_t mode)
     buzzStatus = true;
 }
 
-void checkBuzzerStatus()
+void checkBuzzerStatus(void)
 {
     if (!buzzStatus)
     {

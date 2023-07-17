@@ -4,7 +4,7 @@
 
 static uint32_t sum = 0;
 
-void swtichscan()
+void swtichscan(void)
 {
     rechargeRequest = sum % 10 == 0 ? true : false;
     amount = sum / 10;
@@ -18,7 +18,7 @@ void swtichscan()
     scanPage(rechargeRequest, amount);
 }
 
-uint8_t welcomeProcess()
+uint8_t welcomeProcess(void)
 {
 
     if (bleValue.length() > 1)

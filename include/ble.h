@@ -6,6 +6,6 @@
 static NimBLEServer *pServer;
 extern std::string bleValue;
 
-void setupBLE();
+void setupBLE(void);
 
 #endif
