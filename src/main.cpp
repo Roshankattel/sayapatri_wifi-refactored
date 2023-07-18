@@ -2,8 +2,8 @@
 
 /*Private Function Prototypes*/
 void notifyTimer(uint8_t state);
-void checkWifiStatus();
-void saveConfigCallback();
+void checkWifiStatus(void);
+void saveConfigCallback(void);
 
 void setup()
 {

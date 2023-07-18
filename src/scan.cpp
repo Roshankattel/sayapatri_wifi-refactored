@@ -52,7 +52,7 @@ int scanProcess(void)
 
 #if TEST == 1
     debugln("Running Test Case");
-    lcdDisplay("Running Test Case!", "");
+    showError("Running Test Case!", "");
     const String accessToken = merchantLogin();
     if (accessToken != "")
     {
